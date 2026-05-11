@@ -1,0 +1,122 @@
+---
+title: "팀플"
+output: word_document
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(readr)
+
+Sys.setlocale("LC_TIME", "ko_KR.UTF-8")
+
+
+Data = read.csv("/Users/jiwon/Desktop/Graphics data/data_fin.csv", fileEncoding = "EUC-KR")
+
+Data %>%
+  count(age)
+
+```
+
+- year, month, day: 연, 월, 일
+- age : 이용자 연령대 (10 : ~10대, 20 : 20대, ... , 70 : 70대 이상)
+- time : 따릉이 건별 이용 시간
+- distinct : 따릉이 대여소가 위치한 자치구(Mapo : 마포구, Seod : 서대문구)
+- fine.dust : 
+- ultra.fine.dust : 
+- max : 월별 최고기온
+- min : 월별 최저기온
+- avg_max : 
+- avg_min : 
+- max_date : 월별로 최고기온을 기록한 날짜
+- min_date : 월별로 최저기온을 기록한 날짜
+- gap : 월별 일교차(최고기온 - 최저기온)
+
+
+
+범주형 : distinct, age, year, month, day
+연속형 : 
+
+
+ [1] "year"               "month"              "day"                "rent_office_number" "age"               
+ [6] "time"               "distinct"           "fine.dust"          "ultra.fine.dust"    "max"               
+[11] "min"                "average"            "max_date"           "min_date"           "gap"               
+[16] "avg_max"            "avg_min"     
+
+
+```{r}
+Data = read.csv("/Users/jiwon/Desktop/Graphics data/data_daRjo.csv")
+
+head(Data)
+```
+
+
+
+```{r}
+Data = Data %>%
+   mutate(date = as.Date(paste(year, month, day, sep= "-")))
+
+Data = Data %>%
+  select(date, age:avg_min, everything())
+
+head(Data)
+
+```
+
+
+```{r}
+Data = Data %>%
+  mutate(
+    weekday = weekdays(date, abbreviate = TRUE),
+    weekday = factor(weekday, levels = c("월", "화", "수", "목", "금", "토", "일"))
+  ) %>%  select(date, weekday, age:avg_min, everything())
+
+
+head(Data)
+
+Data %>%
+  ggplot(aes(date)) +
+  geom_freqpoly(binwidth = 0.5)
+
+# 비오는날....?
+
+Data %>%
+  group_by(weekday) %>%
+  ggplot(aes(weekday)) +
+  geom_bar()
+
+```
+```{r}
+Data = Data %>%
+  mutate(fine_dust_level = case_when(
+    fine.dust <= 15 ~ "good",
+    fine.dust <= 35 ~ "so so",
+    fine.dust <= 75 ~ "bad",
+    TRUE ~ "worst"), 
+    )
+
+
+Data = Data %>%
+  mutate(
+    fine_dust_level = factor(fine_dust_level, levels = c("worst", "bad", "so so", "good"))
+  )
+
+
+dust_distribution = Data %>%
+  group_by(fine_dust_level) %>%
+  summarise(count = n())
+
+
+ggplot(dust_distribution, aes(fine_dust_level, count)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(labels = scales::comma) +
+  xlab("Fine Dust Level")
+
+```
+
+각 미세먼지 범주별 빈도수 조사해서 분석하기
+
+
+
+
+

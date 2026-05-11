@@ -1,0 +1,279 @@
+---
+title: "project_1129"
+author: "Yunju Jeong"
+date: "2024-11-29"
+output: html_document
+---
+
+```{r}
+dust <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/dust.csv", fileEncoding="CP949")
+
+
+```
+
+```{r}
+colnames(dust)
+names(dust) = c("date", "district", "fine_dust", "ultrafine_dust")
+```
+
+```{r}
+library(tidyverse)
+
+dust_filtered <- dust %>% 
+  separate(date, into = c("year","month","day"),sep="-") %>%
+  separate(day, into = c("day", "hour")) %>%
+  group_by(year,month,day,district) %>% 
+  summarise(fine = mean(fine_dust, na.rm=TRUE), ultrafine=mean(ultrafine_dust,na.rm=TRUE)) %>%
+  filter(district %in% c("서대문구","마포구"))
+
+
+write.csv(dust_filtered, file = "dust_filtered.csv", row.names = FALSE, fileEncoding = "CP949")
+
+```
+
+```{r}
+temp <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/2022_temp.csv",fileEncoding = "CP949")
+
+
+```
+
+```{r}
+temp <- temp %>% separate(date, into=c("year","month"))
+```
+
+```{r}
+month_mapping <- c("Jan" = 1, "Feb" = 2, "Mar" = 3, "Apr" = 4,
+                   "May" = 5, "Jun" = 6, "Jul" = 7, "Aug" = 8,
+                   "Sep" = 9, "Oct" = 10, "Nov" = 11, "Dec" = 12)
+
+temp$month <- month_mapping[temp$month]
+
+temp$year <- paste0("20", temp$year)
+
+```
+
+```{r}
+write.csv(temp, file = "2022_temp_fin.csv", row.names = FALSE, fileEncoding = "CP949")
+
+```
+
+```{r}
+bic_2209 <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/2209_bic.csv",fileEncoding="EUC-KR")
+```
+
+```{r}
+colnames(bic_2209) = c("date","rent_office_number","rent_office","code","sex","age","n","rm1","rm2","distance","time")
+```
+
+```{r}
+bic_2209 <- bic_2209 %>% select(date,rent_office_number,age,time) %>%
+  arrange(date) %>% separate(date,into = c("year","month","day"),sep="-",convert=TRUE)
+```
+
+```{r}
+bic_2209_seodaemun <- bic_2209%>% filter(rent_office_number %in% c(115, 117, 123, 128, 131, 133, 134, 135, 137, 138, 139, 140, 141, 159, 160, 161, 162, 163, 164, 165, 166, 167, 169, 170, 171, 173, 175, 176, 177, 178, 179, 180, 188, 191, 192, 194, 195, 196, 198, 3100, 3101, 3102, 3103, 3104, 3105, 3107, 3109, 3110, 3111, 3113, 3114, 3115, 3116, 3117, 3119, 3120, 3121, 3122, 3123, 3125, 3126, 3127, 3128, 3129, 3130, 3131, 3132, 3133, 3134, 4253, 4255, 4262, 4264, 4265, 4266, 4267, 4269, 4270, 4271, 4272, 4273, 4274))
+```
+
+```{r}
+bic_2209_mapo <- bic_2209 %>% filter(rent_office_number %in% c(102, 103, 104, 105, 106, 107, 108, 109, 111, 112, 113, 114, 118, 119, 120, 121, 122, 124, 125, 126, 127, 129, 130, 142, 143, 144, 145, 146, 147, 148, 150, 153, 154, 155, 156, 157, 181, 182, 183, 184, 185, 186, 199, 400, 401, 402, 403, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 424, 425, 426, 427, 432, 436, 437, 438, 440, 487, 488, 489, 490, 491, 492, 493, 494, 495, 497, 498, 3002, 3003, 3005, 3006, 3007, 3008, 3009, 3010, 3011, 4202, 4206, 4207, 4208, 4210, 4211, 4212, 4213, 4214, 4216, 4217, 4218, 4220, 4221, 4222, 4224, 4226, 4233, 4234, 4238, 4239, 4240, 4244, 4246, 4247, 4248, 4251, 5503))
+```
+
+
+
+```{r}
+bic_2208 <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/2208_bic.csv",fileEncoding="EUC-KR")
+colnames(bic_2208) = c("date","rent_office_number","rent_office","code","sex","age","n","rm1","rm2","distance","time")
+```
+
+```{r}
+bic_2208 <- bic_2208 %>% select(date,rent_office_number,age,time) %>%
+  arrange(date) %>% separate(date,into = c("year","month","day"),sep="-",convert=TRUE)
+```
+
+```{r}
+bic_2208_seodaemun <- bic_2208%>% filter(rent_office_number %in% c(115, 117, 123, 128, 131, 133, 134, 135, 137, 138, 139, 140, 141, 159, 160, 161, 162, 163, 164, 165, 166, 167, 169, 170, 171, 173, 175, 176, 177, 178, 179, 180, 188, 191, 192, 194, 195, 196, 198, 3100, 3101, 3102, 3103, 3104, 3105, 3107, 3109, 3110, 3111, 3113, 3114, 3115, 3116, 3117, 3119, 3120, 3121, 3122, 3123, 3125, 3126, 3127, 3128, 3129, 3130, 3131, 3132, 3133, 3134, 4253, 4255, 4262, 4264, 4265, 4266, 4267, 4269, 4270, 4271, 4272, 4273, 4274))
+```
+
+```{r}
+bic_2208_mapo <- bic_2208 %>% filter(rent_office_number %in% c(102, 103, 104, 105, 106, 107, 108, 109, 111, 112, 113, 114, 118, 119, 120, 121, 122, 124, 125, 126, 127, 129, 130, 142, 143, 144, 145, 146, 147, 148, 150, 153, 154, 155, 156, 157, 181, 182, 183, 184, 185, 186, 199, 400, 401, 402, 403, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 424, 425, 426, 427, 432, 436, 437, 438, 440, 487, 488, 489, 490, 491, 492, 493, 494, 495, 497, 498, 3002, 3003, 3005, 3006, 3007, 3008, 3009, 3010, 3011, 4202, 4206, 4207, 4208, 4210, 4211, 4212, 4213, 4214, 4216, 4217, 4218, 4220, 4221, 4222, 4224, 4226, 4233, 4234, 4238, 4239, 4240, 4244, 4246, 4247, 4248, 4251, 5503))
+```
+
+
+```{r}
+daegi <- read.csv("C:/Users/jeong/iCloudDrive/Graphics data/2022_daegi.csv",fileEncoding="CP949")
+
+temp <- read.csv("C:/Users/jeong/iCloudDrive/Graphics data/2022_temp_fin.csv",fileEncoding="CP949")
+
+bic_2208_mapo <- read.csv("C:/Users/jeong/iCloudDrive/Graphics data/2208_bic_mapo.csv",fileEncoding="CP949")
+
+bic_2208_seodaemun <- read.csv("C:/Users/jeong/iCloudDrive/Graphics data/2208_bic_seodaemun.csv",fileEncoding="CP949")
+
+bic_2209_mapo <- read.csv("C:/Users/jeong/iCloudDrive/Graphics data/2209_bic_mapo.csv",fileEncoding="CP949")
+
+bic_2209_seodaemun <- read.csv("C:/Users/jeong/iCloudDrive/Graphics data/2209_bic_seodaemun.csv",fileEncoding="CP949")
+```
+
+```{r}
+bic_2208_mapo <- bic_2208_mapo %>% mutate(distinct="마포구")
+
+bic_2208_seodaemun <- bic_2208_seodaemun %>% mutate(distinct = "서대문구")
+
+bic_2208 <- rbind(bic_2208_mapo,bic_2208_seodaemun)
+
+bic_2209_mapo <- bic_2209_mapo %>% mutate(distinct="마포구")
+
+bic_2209_seodaemun <- bic_2209_seodaemun %>% mutate(distinct = "서대문구")
+
+bic_2209 <- rbind(bic_2209_mapo,bic_2209_seodaemun)
+
+bic <- rbind(bic_2208, bic_2209)
+```
+
+```{r}
+data <- bic %>% left_join(daegi) %>% left_join(temp,by="month")
+```
+
+```{r}
+head(data)
+
+write.csv(data,file="data_fin.csv",row.names=FALSE,fileEncoding="CP949")
+```
+
+```{r}
+head(data)
+```
+
+```{r}
+data <- data %>% select(-year.y,-district)
+colnames(data)[1] <- "year"
+```
+
+```{r}
+data$distinct = factor(data$distinct)
+data$age = factor(data$age)
+```
+
+```{r,error=TRUE}
+## 날짜별 따릉이 이용량
+
+Date <- data %>%
+    transmute(date = as.Date(paste(year, month, day, sep = "-"))) %>%
+  group_by(date) %>% summarise(n=n())
+
+Date %>%
+  ggplot() + geom_line(aes(date,n))
+
+Date %>%
+  ggplot() + geom_line(aes(date,n)) +
+  geom_vline(xintercept = as.Date("2022-08-04"), color = "red", linetype = "dashed") + 
+  geom_vline(xintercept = as.Date("2022-08-28"), color = "blue", linetype = "dashed") +
+    geom_vline(xintercept = as.Date("2022-09-18"), color = "red", linetype = "dashed") + 
+  geom_vline(xintercept = as.Date("2022-09-24"), color = "blue", linetype = "dashed")
+```
+
+```{r}
+## 미세먼지에 따른 따릉이 이용량
+data %>% group_by(year,month,day) %>% mutate(n=n()) %>%
+  ggplot(aes(n,fine.dust)) + geom_point() + geom_smooth()
+
+data %>% group_by(year,month,day) %>% mutate(n=n()) %>%
+  ggplot(aes(n,ultra.fine.dust)) + geom_point()
+```
+
+```{r}
+## 월별로 요일에 따른 따릉이 사용 변화
+
+Date %>% mutate(weekday = weekdays(date,abbreviate=TRUE),
+                weekday = factor(weekday, levels=c("일","월","화","수","목","금","토")),
+                month=as.numeric(date-as.Date("2022-07-31"))%/%31+1) %>% 
+  group_by(month, weekday) %>%
+  summarise(avg = mean(n)) %>%
+  ggplot(aes(weekday, avg, group=month, color = factor(month))) + geom_line() 
+```
+
+```{r}
+people <- tibble('마포구' = 362006, '서대문구' = 303912)
+people <- people %>% pivot_longer(c("마포구","서대문구"),names_to="distinct",values_to="population")
+people
+
+data %>% group_by(distinct) %>% count() %>% left_join(people) %>% 
+  mutate(ratio = n/population) %>%
+  ggplot(aes(distinct,ratio)) + geom_bar(stat="identity")
+```
+
+```{r}
+data %>% group_by(year,month,day,distinct) %>% count()
+```
+
+```{r}
+## 지역별 
+
+data %>% 
+  group_by(year,month,day,distinct) %>% 
+  count() %>%
+  ggplot(aes(n,after_stat(density))) + 
+  geom_freqpoly(aes(color=distinct))
+```
+
+```{r}
+
+## 평균기온 별 따릉이 사용량
+weather <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/2022_weather.csv")
+weather$date <- gsub("\t", "", weather$date)
+weather$date <- as.Date(weather$date)
+
+```
+
+```{r}
+## 강수량에 따른 따릉이 사용량
+Date %>% left_join(weather) %>% 
+  ggplot(aes(average,n)) + geom_point() + geom_smooth(method="lm") + ylim(7000,NA)
+```
+
+```{r}
+rainfall <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/2022_rain.csv")
+rainfall$date <- as.Date(rainfall$date)
+```
+
+```{r}
+Date %>% left_join(rainfall) %>%
+  ggplot(aes(n,rainfall)) + geom_point(aes(size=n, color=n))
+```
+
+```{r}
+rainfall <- rainfall %>%
+  mutate(rainfall = ifelse(is.na(rainfall), 0, rainfall))
+
+rainfall
+```
+
+```{r}
+data %>% ggplot(aes(time, fine.dust)) + geom_jitter(alpha=1/3)
+```
+
+```{r}
+data %>% ggplot(aes(time,fine.dust)) + geom_boxplot(aes(group=cut_width(time,500)))
+```
+
+```{r}
+data %>% filter(time<2000) %>% ggplot(aes(time,fine.dust)) +
+  geom_boxplot(aes(group=cut_width(time,200)))
+```
+
+```{r}
+rainfall_1 <- rainfall %>% separate(date,into=c("year","month","day"),sep="-",convert=TRUE)
+
+data %>% left_join(rainfall_1) %>%
+  filter(time<2000) %>%
+  ggplot(aes(time,rainfall)) +
+  geom_point(alpha=1/3)
+```
+
+```{r}
+data %>%
+  group_by(year,month,day) %>%
+  transmute(mean=mean(time),n=n()) %>%
+  left_join(rainfall_1) %>% 
+  ggplot(aes(mean,rainfall)) + geom_point(aes(color=n)) + 
+  geom_smooth(method="lm",color="pink")
+```
