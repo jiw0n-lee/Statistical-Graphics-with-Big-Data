@@ -1,9 +1,3 @@
----
-title: "project_1129"
-author: "Yunju Jeong"
-date: "2024-11-29"
-output: html_document
----
 
 ```{r}
 dust <- read.csv("C:/yunju/TEMP/TEMP2024/graphics/project/dust.csv", fileEncoding="CP949")
