@@ -1,4 +1,4 @@
-# Seoul Public Bike (Ddareungi) Usage Analysis
+## Seoul Public Bike (Ddareungi) Usage Analysis
 
 Final project for the course **Statistical Graphics with Big Data**.
 
