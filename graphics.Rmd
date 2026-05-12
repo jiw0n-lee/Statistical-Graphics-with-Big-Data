@@ -1,7 +1,3 @@
----
-title: "팀플"
-output: word_document
----
 
 ```{r}
 library(tidyverse)
